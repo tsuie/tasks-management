@@ -1,0 +1,33 @@
+# JetBrains/VSCode REST Client requests for Tasks module
+# Set variables
+@baseUrl = http://localhost:3000
+@contentType = application/json
+@taskId = 3
+
+### Create task
+#POST {{baseUrl}}/tasks
+#Content-Type: {{contentType}}
+#
+#{
+#  "title": "Write docs",
+#  "description": "Draft API documentation",
+#  "status": "pending"
+#}
+
+### List tasks
+GET {{baseUrl}}/tasks
+
+### Get task by id
+GET {{baseUrl}}/tasks/{{taskId}}
+
+### Update task (partial)
+PATCH {{baseUrl}}/tasks/{{taskId}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Write docs updated",
+  "status": "in_progress"
+}
+
+### Delete task
+#DELETE {{baseUrl}}/tasks/{{taskId}}
