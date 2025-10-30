@@ -33,8 +33,10 @@ export class TasksService {
     return this.repo.save(task);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<Task> {
+    const removedTask = await this.findOne(id);
     const res = await this.repo.delete(id);
     if (!res.affected) throw new NotFoundException(`Task ${id} not found`);
+    return removedTask;
   }
 }
