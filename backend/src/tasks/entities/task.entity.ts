@@ -6,11 +6,21 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum TaskStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  DONE = 'done',
-}
+export const TaskStatus = {
+  PENDING: 'pending',
+  IN_PROGRESS: 'in_progress',
+  DONE: 'done',
+} as const;
+
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
+
+export const TaskPriority = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+} as const;
+
+export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority];
 
 @Entity({ name: 'tasks' })
 export class Task {
@@ -25,6 +35,12 @@ export class Task {
 
   @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.PENDING })
   status: TaskStatus;
+
+  @Column({ type: 'enum', enum: TaskPriority, default: TaskPriority.MEDIUM })
+  priority: TaskPriority;
+
+  @Column({ type: 'timestamp', name: 'due_date', nullable: true })
+  dueDate?: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

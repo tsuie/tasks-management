@@ -16,4 +16,3 @@ export const dataSource = new DataSource({
   logging: false,
 });
 
-export default dataSource;
