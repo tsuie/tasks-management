@@ -20,7 +20,13 @@ export class TasksService {
 
   async findAll(
     query: QueryTaskDto,
-  ): Promise<{ data: Task[]; total: number; page: number; limit: number }> {
+  ): Promise<{
+    data: Task[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
     const page = query?.page ?? 1;
     const limit = query?.limit ?? 10;
     const sortBy = query?.sortBy;
@@ -54,7 +60,8 @@ export class TasksService {
     qb.skip((page - 1) * limit).take(limit);
 
     const [data, total] = await qb.getManyAndCount();
-    return { data, total, page, limit };
+    const totalPages = Math.ceil(total / limit);
+    return { data, total, page, limit, totalPages };
   }
 
   async findOne(id: number): Promise<Task> {

@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Management Frontend
+
+A modern task management application built with [Next.js](https://nextjs.org) 16, React 19, and TypeScript.
+
+## Features
+
+- ✨ **Create & Edit Tasks** - Add new tasks or modify existing ones with a clean form interface
+- 🔍 **Search** - Real-time search across task titles and descriptions
+- 🎯 **Filter & Sort** - Filter by status and priority, sort by created date, due date, or priority
+- 📄 **Pagination** - Navigate through large task lists with configurable page sizes
+- 🎨 **Priority Badges** - Visual indicators for task priority levels (high, medium, low)
+- ⏰ **Due Date Tracking** - Set and track task due dates with visual indicators
+- 📱 **Responsive Design** - Built with Tailwind CSS for mobile and desktop
+
+## Tech Stack
+
+- **Framework**: Next.js 16 with App Router
+- **UI**: React 19, Tailwind CSS 4
+- **Language**: TypeScript
+- **State Management**: React Hooks
+- **API Integration**: Fetch API with custom error handling
+
+## Prerequisites
+
+- Node.js 20+ installed
+- Backend API running on `http://localhost:3000` (or configure `NEXT_PUBLIC_API_BASE_URL`)
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies**:
+
+```bash
+npm install
+```
+
+2. **Configure environment** (optional):
+
+Create a `.env.local` file if you need to override the default API URL:
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+```
+
+3. **Run the development server**:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. **Open the app**:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Navigate to [http://localhost:3001](http://localhost:3001) in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Available Scripts
 
-## Learn More
+- `npm run dev` - Start development server on port 3001
+- `npm run build` - Build the application for production
+- `npm start` - Start the production server
+- `npm run lint` - Run ESLint to check code quality
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+frontend/
+├── src/
+│   ├── app/              # Next.js App Router pages
+│   │   ├── page.tsx      # Main task management page
+│   │   └── layout.tsx    # Root layout
+│   ├── components/       # React components
+│   │   └── TaskForm.tsx  # Reusable task form component
+│   ├── lib/              # Utility functions
+│   │   └── api.ts        # API client functions
+│   └── types/            # TypeScript type definitions
+│       └── task.ts       # Task-related types
+├── public/               # Static assets
+└── package.json
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## API Integration
 
-## Deploy on Vercel
+The frontend communicates with a NestJS backend API. Key endpoints:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `GET /tasks` - Fetch tasks with pagination, filtering, and search
+- `POST /tasks` - Create a new task
+- `PATCH /tasks/:id` - Update an existing task
+- `DELETE /tasks/:id` - Delete a task
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Query Parameters
+
+- `page` - Page number (default: 1)
+- `limit` - Items per page (default: 10, max: 100)
+- `search` - Search query for title/description
+- `status` - Filter by status (pending, in_progress, done)
+- `priority` - Filter by priority (low, medium, high)
+- `sortBy` - Sort field (createdAt, dueDate, priority)
+- `sortOrder` - Sort direction (asc, desc)
+
+## Development
+
+The app uses React 19's experimental compiler for optimized performance. Edit components in `src/` and the page will auto-reload.
+
+## Building for Production
+
+```bash
+npm run build
+npm start
+```
+
+This creates an optimized production build in the `.next` folder.
