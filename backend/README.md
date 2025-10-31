@@ -117,7 +117,51 @@ Entity: Task
 - List tasks
 
 ```bash
-curl -s http://localhost:3000/tasks
+curl -s "http://localhost:3000/tasks"
+```
+
+#### Filtering, Pagination & Search
+
+The list endpoint supports comprehensive query parameters:
+
+**Pagination**
+- `page` - Page number (integer, min: 1, default: 1)
+- `limit` - Items per page (integer, min: 1, max: 100, default: 10)
+
+**Filtering**
+- `status` - Filter by status: `pending` | `in_progress` | `done`
+- `priority` - Filter by priority: `low` | `medium` | `high`
+
+**Sorting**
+- `sortBy` - Sort field: `dueDate` | `createdAt` | `priority`
+- `sortOrder` - Sort direction: `asc` | `desc` (default: `desc`)
+
+**Search**
+- `search` - Substring match on title or description (trimmed automatically)
+
+**Examples:**
+
+```bash
+# Pagination
+curl -s "http://localhost:3000/tasks?page=2&limit=20"
+
+# Filter by status
+curl -s "http://localhost:3000/tasks?status=pending"
+
+# Filter by priority
+curl -s "http://localhost:3000/tasks?priority=high"
+
+# Search
+curl -s "http://localhost:3000/tasks?search=meeting"
+
+# Sorting
+curl -s "http://localhost:3000/tasks?sortBy=dueDate&sortOrder=asc"
+
+# Combined: high priority pending tasks sorted by due date
+curl -s "http://localhost:3000/tasks?status=pending&priority=high&sortBy=dueDate&sortOrder=asc"
+
+# Full query with all parameters
+curl -s "http://localhost:3000/tasks?page=1&limit=10&status=in_progress&priority=medium&sortBy=createdAt&sortOrder=desc&search=project"
 ```
 
 - Get a task by id
