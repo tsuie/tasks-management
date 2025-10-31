@@ -46,9 +46,22 @@ export class SeedThousandTasks1767166200000 implements MigrationInterface {
           WHEN 13 THEN 'Investigate root cause and implement long-term solution, not just quick fix.'
           ELSE 'This is sample task number ' || gs
         END AS description,
-        (ARRAY['pending','in_progress','done'])[(gs % 3) + 1]::public.tasks_status_enum AS status,
-        (ARRAY['low','medium','high'])[(gs % 3) + 1]::public.tasks_priority_enum AS priority,
-        now() + make_interval(days => (gs % 30)) AS due_date
+        CASE
+          WHEN gs % 7 = 0 THEN 'done'
+          WHEN gs % 5 = 0 THEN 'in_progress'
+          ELSE 'pending'
+        END::public.tasks_status_enum AS status,
+        CASE
+          WHEN gs % 11 = 0 THEN 'high'
+          WHEN gs % 7 = 0 THEN 'low'
+          ELSE 'medium'
+        END::public.tasks_priority_enum AS priority,
+        CASE
+          WHEN gs % 4 = 0 THEN now() + make_interval(days => floor(random() * 7 + 1)::int)  -- Due within next week
+          WHEN gs % 4 = 1 THEN now() + make_interval(days => floor(random() * 23 + 8)::int) -- Due 1-4 weeks out
+          WHEN gs % 4 = 2 THEN now() - make_interval(days => floor(random() * 7 + 1)::int)  -- Overdue
+          ELSE now() + make_interval(days => floor(random() * 60 + 31)::int)              -- Due 1-3 months out
+        END AS due_date
       FROM generate_series(1, 1000) AS gs;
     `);
   }
