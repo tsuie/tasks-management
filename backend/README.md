@@ -1,98 +1,182 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Task Management - Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS + TypeORM (PostgreSQL) backend for managing tasks.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Runtime: Node.js + NestJS
+- ORM: TypeORM
+- DB: PostgreSQL
 
-## Description
+## Prerequisites
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js 18+ and npm
+- PostgreSQL 13+
 
-## Project setup
+## Environment variables
 
-```bash
-$ npm install
+Create a `.env` file in this folder with at least:
+
+```
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/task_management
+DB_SSL=false
+PORT=3000
 ```
 
-## Compile and run the project
+- `DATABASE_URL` is used by TypeORM for both app and CLI.
+- `DB_SSL` optional; set to `true` when connecting to cloud Postgres with SSL.
+- `PORT` optional; defaults to 3000.
+
+## Installation
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+## Database migration
+
+Migrations use TypeORM CLI with the configured data source (`src/database/data-source.ts`).
+
+- Run migrations
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run migration:run
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- Revert last migration
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run migration:revert
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+- Generate a new migration
 
-## Resources
+```bash
+npm run typeorm -- migration:generate src/migrations/<name>
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+> Existing migrations live in `src/migrations/`.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Seeding
 
-## Support
+Seeding is implemented as TypeORM migrations executed against a dedicated seed data source (`src/database/seed-data-source.ts`). Seed files are in `src/seeds/`.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- Run seeds
 
-## Stay in touch
+```bash
+npm run seed:run
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Revert last seed
 
-## License
+```bash
+npm run seed:revert
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Show pending/applied seeds
+
+```bash
+npm run seed:show
+```
+
+## Running the app
+
+- Development (watch mode)
+
+```bash
+npm run start:dev
+```
+
+- Production
+
+```bash
+npm run build && npm run start:prod
+```
+
+CORS is enabled for `http://localhost:3001`. The API listens on `PORT` (default 3000).
+
+## API usage
+
+Base URL: `http://localhost:3000`
+
+Entity: Task
+
+```json
+{
+  "id": 1,
+  "title": "Write docs",
+  "description": "Draft API documentation",
+  "status": "pending",           // one of: pending | in_progress | done
+  "priority": "medium",          // one of: low | medium | high
+  "dueDate": "2025-12-31T23:59:59.000Z",
+  "createdAt": "2025-10-31T00:00:00.000Z",
+  "updatedAt": "2025-10-31T00:00:00.000Z"
+}
+```
+
+### Endpoints
+
+- List tasks
+
+```bash
+curl -s http://localhost:3000/tasks
+```
+
+- Get a task by id
+
+```bash
+curl -s http://localhost:3000/tasks/1
+```
+
+- Create a task
+
+```bash
+curl -s -X POST http://localhost:3000/tasks \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "title": "Write docs",
+    "description": "Draft API documentation",
+    "status": "pending",
+    "priority": "medium",
+    "dueDate": "2025-12-31T23:59:59.000Z"
+  }'
+```
+
+- Update a task (partial)
+
+```bash
+curl -s -X PATCH http://localhost:3000/tasks/1 \
+  -H 'Content-Type: application/json' \
+  -d '{ "status": "in_progress", "title": "Write docs (updated)" }'
+```
+
+- Delete a task
+
+```bash
+curl -s -X DELETE http://localhost:3000/tasks/1
+```
+
+You can also use the ready-made REST client file `rest-api.http` in this folder.
+
+## Testing
+
+```bash
+npm test       # unit
+npm run test:e2e
+npm run test:cov
+```
+
+## Project structure (high level)
+
+```
+src/
+  database/
+    data-source.ts          # TypeORM data source for app/migrations
+    seed-data-source.ts     # Data source for seeds
+  migrations/               # DB migrations
+  seeds/                    # Seed migrations
+  tasks/                    # Tasks module (controller/service/entity)
+```
+
+## Notes
+
+- `synchronize` is disabled; schema changes must be managed via migrations.
+- When using SSL-enabled Postgres, set `DB_SSL=true` (client is configured to not reject self-signed certs).
