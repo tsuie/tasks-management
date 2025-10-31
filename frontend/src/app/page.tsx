@@ -92,12 +92,12 @@ export default function Home() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl p-6">
-      <h1 className="mb-6 text-2xl font-semibold">Task Manager</h1>
+    <div className="mx-auto max-w-5xl p-4 sm:p-6">
+      <h1 className="mb-4 text-xl font-semibold sm:mb-6 sm:text-2xl">Task Manager</h1>
 
       {/* Create/Edit Form */}
-      <div className="mb-8">
-        <h2 className="mb-3 text-lg font-medium">
+      <div className="mb-6 sm:mb-8">
+        <h2 className="mb-2 text-base font-medium sm:mb-3 sm:text-lg">
           {editingTask ? "Edit Task" : "Create New Task"}
         </h2>
         <TaskForm
@@ -109,8 +109,8 @@ export default function Home() {
       </div>
 
       {/* Search and Filters */}
-      <div className="mb-6 grid gap-3 rounded-lg border p-4">
-        <div className="flex items-center gap-2">
+      <div className="mb-4 grid gap-3 rounded-lg border p-3 sm:mb-6 sm:p-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <input
             type="search"
             value={search}
@@ -119,23 +119,23 @@ export default function Home() {
               setPage(1);
             }}
             placeholder="Search tasks..."
-            className="flex-1 rounded-md border px-3 py-2"
+            className="flex-1 rounded-md border px-3 py-2 text-sm sm:text-base"
           />
           <button
             onClick={resetFilters}
-            className="rounded-md border px-4 py-2 hover:bg-zinc-50"
+            className="rounded-md border px-4 py-2 text-sm hover:bg-zinc-50 sm:text-base"
           >
             Reset
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4">
           <select
             value={statusFilter}
             onChange={(e) => {
               setStatusFilter(e.target.value as TaskStatus | "");
               setPage(1);
             }}
-            className="rounded-md border px-3 py-2"
+            className="rounded-md border px-3 py-2 text-sm sm:text-base"
           >
             <option value="">All Statuses</option>
             {Object.entries(STATUS_LABELS).map(([value, label]) => (
@@ -150,7 +150,7 @@ export default function Home() {
               setPriorityFilter(e.target.value as TaskPriority | "");
               setPage(1);
             }}
-            className="rounded-md border px-3 py-2"
+            className="rounded-md border px-3 py-2 text-sm sm:text-base"
           >
             <option value="">All Priorities</option>
             {Object.entries(PRIORITY_LABELS).map(([value, label]) => (
@@ -162,7 +162,7 @@ export default function Home() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as "dueDate" | "createdAt" | "priority")}
-            className="rounded-md border px-3 py-2"
+            className="rounded-md border px-3 py-2 text-sm sm:text-base"
           >
             <option value="createdAt">Created Date</option>
             <option value="dueDate">Due Date</option>
@@ -171,7 +171,7 @@ export default function Home() {
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
-            className="rounded-md border px-3 py-2"
+            className="rounded-md border px-3 py-2 text-sm sm:text-base"
           >
             <option value="desc">Descending</option>
             <option value="asc">Ascending</option>
@@ -189,51 +189,54 @@ export default function Home() {
           <div className="mb-4 text-sm text-zinc-600">
             Showing {tasks.length} of {total} tasks
           </div>
-          <ul className="mb-6 grid gap-3">
+          <ul className="mb-4 grid gap-3 sm:mb-6">
             {tasks.map((t) => (
-              <li key={t.id} className="rounded-lg border p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-medium">{t.title}</h2>
-                      <span
-                        className={`rounded px-2 py-0.5 text-xs font-medium ${
-                          t.priority === "high"
-                            ? "bg-red-100 text-red-700"
-                            : t.priority === "medium"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-green-100 text-green-700"
-                        }`}
-                      >
-                        {PRIORITY_LABELS[t.priority]}
-                      </span>
-                      <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700">
-                        {STATUS_LABELS[t.status]}
-                      </span>
+              <li key={t.id} className="rounded-lg border p-3 sm:p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="mb-2">
+                      <h2 className="mb-1 text-base font-medium sm:text-lg">{t.title}</h2>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span
+                          className={`rounded px-2 py-0.5 text-xs font-medium ${
+                            t.priority === "high"
+                              ? "bg-red-100 text-red-700"
+                              : t.priority === "medium"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-green-100 text-green-700"
+                          }`}
+                        >
+                          {PRIORITY_LABELS[t.priority]}
+                        </span>
+                        <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700">
+                          {STATUS_LABELS[t.status]}
+                        </span>
+                      </div>
                     </div>
                     {t.description && (
-                      <p className="mt-1 text-sm text-zinc-600">{t.description}</p>
+                      <p className="mt-2 text-sm text-zinc-600 line-clamp-2">{t.description}</p>
                     )}
-                    <div className="mt-2 flex items-center gap-4 text-xs text-zinc-400">
-                      <span>#{t.id}</span>
-                      <span>Created: {new Date(t.createdAt).toLocaleString()}</span>
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-400 sm:gap-4">
+                      <span className="whitespace-nowrap">#{t.id}</span>
+                      <span className="hidden sm:inline">Created: {new Date(t.createdAt).toLocaleString()}</span>
+                      <span className="sm:hidden">Created: {new Date(t.createdAt).toLocaleDateString()}</span>
                       {t.dueDate && (
-                        <span className="text-orange-600">
+                        <span className="whitespace-nowrap text-orange-600">
                           Due: {new Date(t.dueDate).toLocaleDateString()}
                         </span>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 sm:flex-col sm:items-stretch">
                     <button
                       onClick={() => setEditingTask(t)}
-                      className="rounded-md border px-3 py-1 text-sm hover:bg-zinc-50"
+                      className="flex-1 rounded-md border px-3 py-1.5 text-sm hover:bg-zinc-50 sm:flex-none"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => onDelete(t.id)}
-                      className="rounded-md border border-red-300 px-3 py-1 text-sm text-red-600 hover:bg-red-50"
+                      className="flex-1 rounded-md border border-red-300 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 sm:flex-none"
                     >
                       Delete
                     </button>
@@ -245,15 +248,15 @@ export default function Home() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="rounded-md border px-3 py-2 hover:bg-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-md border px-4 py-2 text-sm hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:text-base"
               >
                 Previous
               </button>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 overflow-x-auto">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let pageNum: number;
                   if (totalPages <= 5) {
@@ -269,7 +272,7 @@ export default function Home() {
                     <button
                       key={pageNum}
                       onClick={() => setPage(pageNum)}
-                      className={`rounded-md px-3 py-2 ${
+                      className={`min-w-[2.5rem] rounded-md px-3 py-2 text-sm sm:text-base ${
                         page === pageNum
                           ? "bg-black text-white"
                           : "border hover:bg-zinc-50"
@@ -283,7 +286,7 @@ export default function Home() {
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="rounded-md border px-3 py-2 hover:bg-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-md border px-4 py-2 text-sm hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:text-base"
               >
                 Next
               </button>
