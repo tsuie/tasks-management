@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from '../service/tasks.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
+import { QueryTaskDto } from '../dto/query-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -22,8 +24,8 @@ export class TasksController {
   }
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@Query() query: QueryTaskDto) {
+    return this.tasksService.findAll(query);
   }
 
   @Get(':id')

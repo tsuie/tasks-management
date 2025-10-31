@@ -14,8 +14,11 @@
 #  "status": "pending"
 #}
 
-### List tasks
+### List tasks (basic)
 GET {{baseUrl}}/tasks
+
+### List tasks with pagination, filter, sort, search
+GET {{baseUrl}}/tasks?page=1&limit=10&status=pending&priority=medium&sortBy=dueDate&sortOrder=asc&search=docs
 
 ### Get task by id
 GET {{baseUrl}}/tasks/{{taskId}}

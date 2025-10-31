@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Task } from '../entities/task.entity';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
+import { QueryTaskDto } from '../dto/query-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -17,8 +18,43 @@ export class TasksService {
     return this.repo.save(task);
   }
 
-  findAll(): Promise<Task[]> {
-    return this.repo.find({ order: { id: 'DESC' } });
+  async findAll(
+    query: QueryTaskDto,
+  ): Promise<{ data: Task[]; total: number; page: number; limit: number }> {
+    const page = query?.page ?? 1;
+    const limit = query?.limit ?? 10;
+    const sortBy = query?.sortBy;
+    const sortOrder: 'ASC' | 'DESC' =
+      (query?.sortOrder?.toUpperCase?.() as 'ASC' | 'DESC') || 'DESC';
+
+    const qb = this.repo.createQueryBuilder('task');
+
+    if (query?.status) {
+      qb.andWhere('task.status = :status', { status: query.status });
+    }
+    if (query?.priority) {
+      qb.andWhere('task.priority = :priority', { priority: query.priority });
+    }
+    if (query?.search) {
+      qb.andWhere('(task.title ILIKE :q OR task.description ILIKE :q)', {
+        q: `%${query.search}%`,
+      });
+    }
+
+    if (sortBy === 'dueDate') {
+      qb.orderBy('task.dueDate', sortOrder, 'NULLS LAST');
+    } else if (sortBy === 'createdAt') {
+      qb.orderBy('task.createdAt', sortOrder);
+    } else if (sortBy === 'priority') {
+      qb.orderBy('task.priority', sortOrder);
+    } else {
+      qb.orderBy('task.id', 'DESC');
+    }
+
+    qb.skip((page - 1) * limit).take(limit);
+
+    const [data, total] = await qb.getManyAndCount();
+    return { data, total, page, limit };
   }
 
   async findOne(id: number): Promise<Task> {
